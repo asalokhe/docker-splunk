@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="c95cf108-dad0-4b8f-9c20-10502f5e4397" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="f45d7eaa-2ef3-451f-80c5-06dbab15b39b" file="mule-splunk-demo-config.yaml" />
+	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="61cfea42-370d-495c-9b5b-8ec4f000c46e" environment="#[p('mule.env')]" prettyPrint="false"/>
+	<flow name="mule-splunk-demoFlow" doc:id="1f55a184-7cfa-4549-aa48-f6bd6727494c" >
+		<http:listener doc:name=" /splunk" doc:id="1c4b9170-7374-4998-ad64-e5c80a0aed0b" config-ref="HTTP_Listener_config" path="/splunk"/>
+		<json-logger:logger doc:name="Input Logger" doc:id="bcddbe3c-8949-4de7-935f-c847fc5a7243" message="Input Message" config-ref="JSON_Logger_Config"/>
+		<ee:transform doc:name="Transform Message" doc:id="879fbf14-90ab-4d23-b448-b8583dd0f1a3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "Hello from mule splunk demo @ : " ++ now()
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="Output Logger" doc:id="809bf7e3-a4e0-4a94-971f-d641aa25a53d" config-ref="JSON_Logger_Config" message="Output Message"/>
+	</flow>
+</mule>

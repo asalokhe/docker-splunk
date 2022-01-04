@@ -1,0 +1,40 @@
+version: "3.6"
+
+services:
+  splunk:
+    build:
+      context: splunk/
+    container_name: local-splunk
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_PASSWORD # "SPLUNK_PASSWORD=<password> docker-compose up" To pass the password dynamically
+      
+      # HTTP Event Collector (HEC) curl -k https://localhost:8088/services/collector/event -H "Authorization: Splunk abcd1234" -d '{"event": "hello world"}'
+      #  {"text": "Success", "code": 0}
+      # https://splunk.github.io/docker-splunk/EXAMPLES.html#create-standalone-from-compose
+      - SPLUNK_HEC_TOKEN=abcd1234
+
+      - DEBUG=true
+      #- SPLUNK_LICENSE_URI=Free # Works: stopping to checking enterprise capabilities : Splunk Free is the totally free version of Splunk software. The Free license lets you index up to 500 MB per day and will never expire.
+    ports:
+      - "8000:8000" # SplunkWeb UI
+      - "9997:9997" # Indexing/receiving
+      - "8088:8088" # HTTP Event Collector (HEC)
+      - "8089:8089" # SplunkD management port (REST API access)
+      - "5000:5000" # TCP Data Input with custom defined 5000 port.
+    volumes: 
+      - type: volume
+        source: splunk-vol-var
+        target: /opt/splunk/var
+      - type: volume
+        source: splunk-vol-etc
+        target: /opt/splunk/etc
+    networks: 
+      splunknet:
+
+networks:
+  splunknet:
+
+volumes:
+  splunk-vol-var:
+  splunk-vol-etc:

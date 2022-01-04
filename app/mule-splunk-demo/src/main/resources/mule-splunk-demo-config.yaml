@@ -1,0 +1,8 @@
+json:
+  logger:
+    application:
+      name: "Mule Splunk Demo Config"
+      version: "1.0.0"
+      
+mule:
+  env: "Dev"
