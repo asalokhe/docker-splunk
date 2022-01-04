@@ -58,7 +58,7 @@ Steps:
 1. You can disable CloudHub logs and integrate your CloudHub application with your logging system by using the Log4j configuration. After you configure logs to flow to both your log system and CloudHub, disable the default CloudHub application logs.
     https://docs.mulesoft.com/runtime-manager/custom-log-appender
 
-The Docker-Splunk project is the official source code repository for building Docker images of Splunk Enterprise and Splunk Universal Forwarder.
-2. https://splunk.github.io/docker-splunk/
+2. The Docker-Splunk project is the official source code repository for building Docker images of Splunk Enterprise and Splunk Universal Forwarder.
+    https://splunk.github.io/docker-splunk/
 
 ###################################################################################################################################################################
